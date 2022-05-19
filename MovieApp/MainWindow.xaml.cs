@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Windows;
 
@@ -37,20 +38,27 @@ namespace MovieApp
             //åbner vejen
             sqlConnection.Open();
 
-            //instansiere en klasse SqlCommand
-            string sqlCommand = new("SELECT * FROM Movies");
+            try
+            {
+                //instansiere en klasse SqlCommand
+                string sqlCommand = new("SELECT * FROM Movies");
 
-            //indsætter min data i sqlDataAdapter som jeg instansiere
-            SqlDataAdapter sqlDataAdapter = new(sqlCommand, sqlConnection);
+                //indsætter min data i sqlDataAdapter som jeg instansiere
+                SqlDataAdapter sqlDataAdapter = new(sqlCommand, sqlConnection);
 
-            //opretter fiktiv datatable af datagrid
-            DataTable movies = new();
+                //opretter fiktiv datatable af datagrid
+                DataTable movies = new();
 
-            //refresher eller add til dataTable
-            sqlDataAdapter.Fill(movies);
+                //refresher eller add til dataTable
+                sqlDataAdapter.Fill(movies);
 
-            //tilføjer til min Tabel
-            MovieTable.ItemsSource = movies.DefaultView;
+                //tilføjer til min Tabel
+                MovieTable.ItemsSource = movies.DefaultView;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         /// <summary>
@@ -74,7 +82,7 @@ namespace MovieApp
                 MessageBox.Show("Der skal være en titel på filmen.");
             if (checkerRating && checkerTitle && checkerYear)
                 Opret();
-            
+
         }
 
         /// <summary>
@@ -123,32 +131,39 @@ namespace MovieApp
                     //åbner vejen
                     sqlConnection.Open();
 
-                    //finder rækken
-                    DataRowView row = (DataRowView)MovieTable.SelectedItems[0];
+                    try
+                    {
+                        //finder rækken
+                        DataRowView row = (DataRowView)MovieTable.SelectedItems[0];
 
-                    //tager index 0 fra række og putter i display
-                    int display = (int)row.Row.ItemArray[0];
+                        //tager index 0 fra række og putter i display
+                        int display = (int)row.Row.ItemArray[0];
 
-                    //istansiere klassen SqlCommand
-                    string sqlCommand = $"Delete from Movies Where ID ='{display}'";
+                        //istansiere klassen SqlCommand
+                        string sqlCommand = $"Delete from Movies Where ID ='{display}'";
 
-                    //laver en adapter til sql sådan så den kan opdaterer min tabel
-                    SqlDataAdapter sqlDataAdapter = new();
+                        //laver en adapter til sql sådan så den kan opdaterer min tabel
+                        SqlDataAdapter sqlDataAdapter = new();
 
-                    //putter min sql commando og connectionstring i deleteCommand
-                    sqlDataAdapter.DeleteCommand = new(sqlCommand, sqlConnection);
+                        //putter min sql commando og connectionstring i deleteCommand
+                        sqlDataAdapter.DeleteCommand = new(sqlCommand, sqlConnection);
 
-                    //verificere for brugeren den er fjernet
-                    MessageBox.Show("Filmen er fjernet.");
+                        //verificere for brugeren den er fjernet
+                        MessageBox.Show("Filmen er fjernet.");
 
-                    //eksekverer commandoen
-                    sqlDataAdapter.DeleteCommand.ExecuteNonQuery();
+                        //eksekverer commandoen
+                        sqlDataAdapter.DeleteCommand.ExecuteNonQuery();
 
-                    //sletter rækken
-                    sqlDataAdapter.Dispose();
+                        //sletter rækken
+                        sqlDataAdapter.Dispose();
 
-                    //refresher min side
-                    BindDataGrid();
+                        //refresher min side
+                        BindDataGrid();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
                 }
             }
         }
@@ -216,36 +231,43 @@ namespace MovieApp
                     //åbner vejen
                     sqlConnection.Open();
 
-                    //finder rækken
-                    DataRowView row = (DataRowView)MovieTable.SelectedItems[0];
+                    try
+                    {
+                        DataRowView row = (DataRowView)MovieTable.SelectedItems[0];
 
-                    //tager index 0 fra række og putter i display
-                    int display = (int)row.Row.ItemArray[0];
+                        //tager index 0 fra række og putter i display
+                        int display = (int)row.Row.ItemArray[0];
 
-                    //istansiere klassen SqlCommand
-                    string change = $"UPDATE Movies SET Title = '{TextBoxTitle.Text}', Year = '{TextBoxYear.Text}', Rating = {TextBoxRating.Text} Where ID = {display}";
+                        //istansiere klassen SqlCommand
+                        string change = $"UPDATE Movies SET Title = '{TextBoxTitle.Text}', Year = '{TextBoxYear.Text}', Rating = {TextBoxRating.Text} Where ID = {display}";
 
-                    //laver en adapter til sql sådan så den kan opdaterer min tabel
-                    SqlDataAdapter sqlDataAdapter = new();
+                        //laver en adapter til sql sådan så den kan opdaterer min tabel
+                        SqlDataAdapter sqlDataAdapter = new();
 
-                    //putter min sql commando og connectionstring i deleteCommand
-                    sqlDataAdapter.DeleteCommand = new(change, sqlConnection);
+                        //putter min sql commando og connectionstring i deleteCommand
+                        sqlDataAdapter.DeleteCommand = new(change, sqlConnection);
 
-                    //verificere for brugeren den er fjernet
-                    MessageBox.Show("Filmen er opdateret.");
+                        //verificere for brugeren den er fjernet
+                        MessageBox.Show("Filmen er opdateret.");
 
-                    //eksekverer commandoen
-                    sqlDataAdapter.DeleteCommand.ExecuteNonQuery();
+                        //eksekverer commandoen
+                        sqlDataAdapter.DeleteCommand.ExecuteNonQuery();
 
-                    //sletter rækken
-                    sqlDataAdapter.Dispose();
+                        //sletter rækken
+                        sqlDataAdapter.Dispose();
 
-                    //refresher min side
-                    BindDataGrid();
+                        //refresher min side
+                        BindDataGrid();
 
-                    //ændre knap efter ændringerne
-                    ConfirmButton.Visibility = Visibility.Hidden;
-                    OpretButton.Visibility = Visibility.Visible;
+                        //ændre knap efter ændringerne
+                        ConfirmButton.Visibility = Visibility.Hidden;
+                        OpretButton.Visibility = Visibility.Visible;
+
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
                 }
             }
         }
