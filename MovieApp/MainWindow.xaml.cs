@@ -96,20 +96,27 @@ namespace MovieApp
             //åbner vejen
             sqlConnection.Open();
 
-            //istansiere SqlCommand klassen og indsætter i databasen
-            SqlCommand sqlCommand = new($"INSERT INTO Movies (Title, Year, Rating) values('{TextBoxTitle.Text}', '{TextBoxYear.Text}', '{TextBoxRating.Text}')");
+            try
+            {
+                //istansiere SqlCommand klassen og indsætter i databasen
+                SqlCommand sqlCommand = new($"INSERT INTO Movies (Title, Year, Rating) values('{TextBoxTitle.Text}', '{TextBoxYear.Text}', '{TextBoxRating.Text}')");
 
-            //tilføjer min ConnectionString til sqlCommand object
-            sqlCommand.Connection = sqlConnection;
+                //tilføjer min ConnectionString til sqlCommand object
+                sqlCommand.Connection = sqlConnection;
 
-            //laver en show til brugerne så man ved den er tilføjet
-            MessageBox.Show("Filmen er tilføjet.");
+                //laver en show til brugerne så man ved den er tilføjet
+                MessageBox.Show("Filmen er tilføjet.");
 
-            //sender til min database
-            sqlCommand.ExecuteNonQuery();
+                //sender til min database
+                sqlCommand.ExecuteNonQuery();
 
-            //refresher min side
-            BindDataGrid();
+                //refresher min side
+                BindDataGrid();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         /// <summary>
