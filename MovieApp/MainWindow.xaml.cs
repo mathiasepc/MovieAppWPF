@@ -216,7 +216,7 @@ namespace MovieApp
                 Confirm();
             }
 
-            //ændre knap efter ændringerne
+            //ændre knap efter der er trykket på Edit.
             ConfirmButton.Visibility = Visibility.Hidden;
             OpretButton.Visibility = Visibility.Visible;
         }
